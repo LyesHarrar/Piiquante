@@ -1,6 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
+const helmet = require('helmet');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
@@ -8,7 +12,7 @@ const userRoutes = require('./routes/user');
 const app = express();
 
 //connexion à la base de données
-mongoose.connect('mongodb+srv://lyes:9EzJVLfgHL9G6WWq@cluster0.elrxx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {
+mongoose.connect('mongodb+srv://' + process.env.DB_USER + ':' + process.env.DB_PASSWORD + '@cluster0.elrxx.mongodb.net/' + process.env.DB_NAME + '?retryWrites=true&w=majority', {
         useNewUrlParser: true,
         useUnifiedTopology: true
     })
@@ -26,6 +30,7 @@ app.use((req, res, next) => {
 app.use(express.json()); //Utilisé pour parser le corps JSON
 
 // routes
+app.use(helmet());
 app.use('/api/sauces', sauceRoutes);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/auth', userRoutes);
