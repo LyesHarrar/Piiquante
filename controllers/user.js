@@ -1,12 +1,15 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
-const saltRounds = 10;
+const dotenv = require('dotenv');
+
+dotenv.config();
+
+
 
 // controller d'authentification
 exports.signup = (req, res, next) => {
-
-    bcrypt.hash(req.body.password, saltRounds)
+    bcrypt.hash(req.body.password, process.env.SALT)
         .then(hash => {
             const user = new User({
                 email: req.body.email,
@@ -34,7 +37,7 @@ exports.login = (req, res, next) => {
                     res.status(200).json({
                         userId: user._id,
                         token: jwt.sign({ userId: user._id },
-                            'RANDOM_TOKEN_SECRET', { expiresIn: '24h' }
+                            process.env.JWTPRIVATEKEY /*on pourrait utiliser ici une chaine crypto pour une production*/ , { expiresIn: '24h' }
                         )
                     });
                 })

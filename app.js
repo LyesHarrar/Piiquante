@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 const helmet = require('helmet');
 const dotenv = require('dotenv');
+const morgan = require('morgan');
 
 dotenv.config();
 
@@ -27,7 +28,11 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(express.json()); //Utilisé pour parser le corps JSON
+//Utilisé pour parser le corps des réponses en JSON
+app.use(express.json());
+
+// ajout de morgan pour le log des requetes HTTP
+app.use(morgan('combined'));
 
 // routes
 app.use(helmet());
