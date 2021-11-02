@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const salt = 10;
 
 dotenv.config();
 
@@ -9,7 +10,7 @@ dotenv.config();
 
 // controller d'authentification
 exports.signup = (req, res, next) => {
-    bcrypt.hash(req.body.password, process.env.SALT)
+    bcrypt.hash(req.body.password, salt)
         .then(hash => {
             const user = new User({
                 email: req.body.email,
